@@ -4,12 +4,13 @@ import java.util.Random;
 
 /*
     Sistema que controla el paso de personas por un puente:
-    - Siempre pasan en la misma dirección.
-    - No pueden pasar más de tres personas a la vez.
-    - No puede soportar más de 200 Kg de peso en ningún momento
-    - El tiempo de llegada de las personas es aleatorio, entre 1 y 30 segundos.
-    - El tiempo de paso de las personas es aleatorio entren 10 y 50 segundos.
-    - Las personas tienen un peso aleatorio entre 40 y 120 Kg
+    Las personas pueden pasar en los dos sentidos.
+    No puede haber más de cuatro personas a la vez.
+    No puede haber más de tres personas en cada sentido.
+    No puede haber más de 300 kg de peso en ningún momento.
+    El tiempo entre la llegada de dos personas es aleatorio entre 1 y 30 segundos.
+    El tiempo en atravesar el puente es aleatorio, entre 10 y 50 segundos.
+    Las personas tienen un peso aleatorio entre 40 y 120 kg.
 */
 
 public class PuenteThreadSafe {
@@ -30,6 +31,7 @@ public class PuenteThreadSafe {
         int tiempoLlegada = 0;
         int tiempoPaso = 0;
         int pesoPersona = 0;
+        String sentido = "";
         
         //Bucle infinito creando personas para cruzar el puente
         int numeroPersona = 0;
@@ -40,9 +42,10 @@ public class PuenteThreadSafe {
             tiempoLlegada = numeroAleatorio(MINIMO_TIEMPO_LLEGADA, MAXIMO_TIEMPO_LLEGADA);
             tiempoPaso = numeroAleatorio(MINIMO_TIEMPO_PASO, MAXIMO_TIEMPO_PASO);
             pesoPersona = numeroAleatorio(MINIMO_PESO_PERSONA, MAXIMO_PESO_PERSONA);
-            System.out.printf("La %s llegará en %d segundos, pesa %d kilos y tardará %d segundos en cruzar. \n",
-                        idPersona, tiempoLlegada, pesoPersona, tiempoPaso);
-            Thread hiloPersona = new Thread(new Persona(idPersona, tiempoPaso, pesoPersona, puente));
+            sentido = numeroAleatorio(0, 1) == 0 ? "NORTE" : "SUR";
+            System.out.printf("La %s llegará en %d segundos, en sentido %s, pesa %d kilos y tardará %d segundos en cruzar. \n",
+                        idPersona, tiempoLlegada, sentido, pesoPersona, tiempoPaso);
+            Thread hiloPersona = new Thread(new Persona(idPersona, tiempoPaso, pesoPersona, sentido, puente));
             // Esperar a que llegue
             try {
                 Thread.sleep(tiempoPaso * 100);

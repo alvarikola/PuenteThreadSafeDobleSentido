@@ -9,14 +9,16 @@ public class Persona implements Runnable{
     private final String idPersona;
     private final int tiempoPaso;
     private final int pesoPersona;
+    private final String sentido;
     private final Puente puente;
     
     //Contructor
 
-    public Persona(String idPersona, int tiempoPaso, int pesoPersona, Puente puente) {
+    public Persona(String idPersona, int tiempoPaso, int pesoPersona, String sentido, Puente puente) {
         this.idPersona = idPersona;
         this.tiempoPaso = tiempoPaso;
         this.pesoPersona = pesoPersona;
+        this.sentido = sentido;
         this.puente = puente;
     }
     
@@ -30,13 +32,17 @@ public class Persona implements Runnable{
     public int getPesoPersona() {
         return pesoPersona;
     }
+
+    public String getSentido() {
+        return sentido;
+    }
     
     // Método run().
     @Override
     public void run() {
-        System.out.printf(">>> La %s con %d kilos quiere cruzar en %d segundos.\n" + 
+        System.out.printf(">>> La %s con %d kilos quiere cruzar en %d segundos y en sentido %s.\n" + 
                           "    Estado del Puente: %d personas, %d kilos.\n",
-            idPersona, pesoPersona, tiempoPaso, puente.getNumeroPersonas(), puente.getPesoPersonas());
+            idPersona, pesoPersona, tiempoPaso, sentido, puente.getNumeroPersonas(), puente.getPesoPersonas());
         // Entrar
         try {
             puente.entrar(this);

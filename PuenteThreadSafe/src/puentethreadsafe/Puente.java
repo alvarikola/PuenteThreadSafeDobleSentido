@@ -3,11 +3,15 @@ package puentethreadsafe;
 
 public class Puente {
     // Constantes
-    private static final int MAXIMO_PERSONAS = 3;
-    private static final int MAXIMO_PESO = 200;
+    private static final int MAXIMO_PERSONAS = 4;
+    private static final int MAXIMO_PESO = 300;
+    private static final int MAXIMO_PERSONAS_SENTIDO = 3;
     // Variables
     private int numeroPersonas = 0;
     private int pesoPersonas = 0;
+    private String sentido = "";
+    private int numeroPersonasNorte = 0;
+    private int numeroPersonasSur = 0;
     // Contructor
     public Puente() {
     }
