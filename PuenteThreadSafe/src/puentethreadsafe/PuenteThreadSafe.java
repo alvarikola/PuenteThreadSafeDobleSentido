@@ -15,9 +15,7 @@ import java.util.Random;
 
 public class PuenteThreadSafe {
 
-   
     public static void main(String[] args) {
-        // Constantes 
         final int MINIMO_TIEMPO_LLEGADA = 1;
         final int MAXIMO_TIEMPO_LLEGADA = 30;
         final int MINIMO_TIEMPO_PASO = 10;
@@ -25,38 +23,39 @@ public class PuenteThreadSafe {
         final int MINIMO_PESO_PERSONA = 40;
         final int MAXIMO_PESO_PERSONA = 120;
         
-        //Variables
+        // Instancia del puente
         final Puente puente = new Puente();
-        String idPersona = "";
-        int tiempoLlegada = 0;
-        int tiempoPaso = 0;
-        int pesoPersona = 0;
-        String sentido = "";
-        
-        //Bucle infinito creando personas para cruzar el puente
         int numeroPersona = 0;
+        
+        // Bucle infinito creando personas para cruzar el puente
         while (true) {
-            //Crear una persona
+            // Crear una persona
             numeroPersona++;
-            idPersona = "Persona " + numeroPersona; 
-            tiempoLlegada = numeroAleatorio(MINIMO_TIEMPO_LLEGADA, MAXIMO_TIEMPO_LLEGADA);
-            tiempoPaso = numeroAleatorio(MINIMO_TIEMPO_PASO, MAXIMO_TIEMPO_PASO);
-            pesoPersona = numeroAleatorio(MINIMO_PESO_PERSONA, MAXIMO_PESO_PERSONA);
-            sentido = numeroAleatorio(0, 1) == 0 ? "NORTE" : "SUR";
+            String idPersona = "Persona " + numeroPersona;
+            int tiempoLlegada = numeroAleatorio(MINIMO_TIEMPO_LLEGADA, MAXIMO_TIEMPO_LLEGADA);
+            int tiempoPaso = numeroAleatorio(MINIMO_TIEMPO_PASO, MAXIMO_TIEMPO_PASO);
+            int pesoPersona = numeroAleatorio(MINIMO_PESO_PERSONA, MAXIMO_PESO_PERSONA);
+            String sentido = numeroAleatorio(0, 1) == 0 ? "NORTE" : "SUR";
             System.out.printf("La %s llegará en %d segundos, en sentido %s, pesa %d kilos y tardará %d segundos en cruzar. \n",
                         idPersona, tiempoLlegada, sentido, pesoPersona, tiempoPaso);
+            
+            // Crear el hilo de la persona
             Thread hiloPersona = new Thread(new Persona(idPersona, tiempoPaso, pesoPersona, sentido, puente));
-            // Esperar a que llegue
+            
+            // Esperar antes de que llegue la siguiente persona
             try {
-                Thread.sleep(tiempoPaso * 100);
+                Thread.sleep(tiempoLlegada * 100); // Espera el tiempo entre llegadas
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
+
+            // Iniciar el hilo de la persona
             hiloPersona.start();
         }
     }
-    
-    public static int numeroAleatorio(int valorMinimo, int valorMaximo) {
-        Random r = new Random();
-        return valorMinimo + r.nextInt(valorMaximo - valorMinimo + 1);
+
+    public static int numeroAleatorio(int min, int max) {
+        Random random = new Random();
+        return random.nextInt(max - min + 1) + min;
     }
 }
